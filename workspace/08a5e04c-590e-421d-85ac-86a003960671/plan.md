@@ -1,0 +1,9 @@
+# Task dependency graph
+
+- REQUIREMENTS: depends on none
+- PLANNING: depends on REQUIREMENTS
+- ARCHITECTURE: depends on PLANNING
+- IMPLEMENTATION: depends on ARCHITECTURE
+- TESTING: depends on IMPLEMENTATION
+- DOCUMENTATION: depends on IMPLEMENTATION
+- REVIEW: depends on TESTING, DOCUMENTATION

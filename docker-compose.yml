@@ -1,0 +1,37 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: shortener
+      POSTGRES_PASSWORD: localdev
+      POSTGRES_DB: shortener
+    ports: ["5432:5432"]
+    volumes: ["pgdata:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U shortener"]
+      interval: 5s
+      retries: 10
+  url-shortener:
+    build: ./url-shortener-service
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/shortener
+      DB_USER: shortener
+      DB_PASSWORD: localdev
+      BASE_URL: http://localhost:8080
+    ports: ["8080:8080"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+  orchestrator:
+    build: ./agentic-orchestrator
+    ports: ["8000:8000"]
+    volumes:
+      - ./workspace:/app/workspace
+      - ./url-shortener-service:/app/url-shortener-service
+    environment:
+      WORKSPACE_ROOT: /app/workspace
+      SOURCE_REPO: /app/url-shortener-service
+      LLM_API_KEY: ${LLM_API_KEY:-}
+      LLM_MODEL: ${LLM_MODEL:-gpt-4.1-mini}
+volumes:
+  pgdata:

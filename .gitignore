@@ -1,0 +1,10 @@
+**/__pycache__/
+**/.pytest_cache/
+**/.venv/
+**/target/
+**/.idea/
+**/.DS_Store
+workspace/*
+!workspace/.gitkeep
+.env
+*.sqlite3
